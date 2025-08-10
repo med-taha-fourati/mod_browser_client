@@ -1,0 +1,59 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ModArchiveDownloaderFrontend.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="clr-namespace:ModArchiveDownloaderFrontend.Models"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        Width="1000" Height="600"
+        x:Class="ModArchiveDownloaderFrontend.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="modarchive.org Downloader Client">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <DockPanel VerticalAlignment="Top">
+        <!-- Top Bar -->
+        <Border Background="DarkCyan" Height="48" DockPanel.Dock="Top">
+            <TextBlock Text="modarchive.org Downloader Client" Foreground="White" VerticalAlignment="Center" Margin="16,0" FontWeight="Bold" FontSize="18"/>
+        </Border>
+
+        <!-- ListView Area -->
+        <StackPanel x:Name="SearchArea" Margin="20">
+            <Label>Search By Mod Name: </Label>
+            <TextBox x:Name="SearchAreaTextBox" Watermark="e.g thunder"></TextBox>
+        </StackPanel>
+
+        <!-- Card ListBox Area -->
+        <StackPanel>
+        <ListBox ItemsSource="{Binding Items}" Margin="10,0,20,20">
+            <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="models:Module">
+                    <!--BoxShadow="2,2,8,0,#888"-->
+                    <Border Background="#555" CornerRadius="8" Margin="0,8" Padding="16">
+                        <DockPanel>
+                            <!-- Main info on the left -->
+                            <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
+                                <TextBlock Text="{Binding FileName}" FontWeight="Bold" FontSize="16"/>
+                                <TextBlock Text="{Binding ModuleCode}" FontSize="13" Foreground="Gray"/>
+                            </StackPanel>
+                            <!-- Action buttons on the right -->
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" DockPanel.Dock="Right">
+                                <Button ToolTip.Tip="Download"><TextBlock FontSize="18">⬇️</TextBlock></Button>
+                                <Button ToolTip.Tip="Browse Details"><TextBlock FontSize="18">🔍</TextBlock></Button>
+                            </StackPanel>
+                        </DockPanel>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        </StackPanel>
+
+    </DockPanel>
+
+</Window>
