@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:models="clr-namespace:ModArchiveDownloaderFrontend.Models"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
         Width="1000" Height="600"
         x:Class="ModArchiveDownloaderFrontend.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -24,18 +24,19 @@
         </Border>
 
         <!-- ListView Area -->
-        <StackPanel x:Name="SearchArea" Margin="20">
+        <StackPanel x:Name="SearchArea" Margin="20" Width="200" MaxWidth="200">
             <Label>Search By Mod Name: </Label>
             <TextBox x:Name="SearchAreaTextBox" Watermark="e.g thunder"></TextBox>
+            <Button ToolTip.Tip="Search" Margin="0 10"><TextBlock Foreground="AliceBlue">Search</TextBlock></Button>
         </StackPanel>
 
         <!-- Card ListBox Area -->
-        <StackPanel>
-        <ListBox ItemsSource="{Binding Items}" Margin="10,0,20,20">
+        <ListBox ItemsSource="{Binding Items}" Margin="10,10,0,0">
             <ListBox.ItemTemplate>
                 <DataTemplate x:DataType="models:Module">
                     <!--BoxShadow="2,2,8,0,#888"-->
-                    <Border Background="#555" CornerRadius="8" Margin="0,8" Padding="16">
+                    <Border Background="#555" CornerRadius="8" Margin="0,0" Padding="15 10">
+                        
                         <DockPanel>
                             <!-- Main info on the left -->
                             <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
@@ -44,15 +45,21 @@
                             </StackPanel>
                             <!-- Action buttons on the right -->
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" DockPanel.Dock="Right">
-                                <Button ToolTip.Tip="Download"><TextBlock FontSize="18">⬇️</TextBlock></Button>
-                                <Button ToolTip.Tip="Browse Details"><TextBlock FontSize="18">🔍</TextBlock></Button>
+                                <Button ToolTip.Tip="Download"><TextBlock FontSize="18" Foreground="AliceBlue">Download</TextBlock></Button>
+                                <Button ToolTip.Tip="Browse Details"><TextBlock FontSize="18" Foreground="AliceBlue">View</TextBlock></Button>
                             </StackPanel>
                         </DockPanel>
                     </Border>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        </StackPanel>
+        
+        <TextBlock Text="No modules found."
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="18"
+                   Foreground="Gray"
+                   IsVisible="{Binding HasNoItems}"/>
 
     </DockPanel>
 
