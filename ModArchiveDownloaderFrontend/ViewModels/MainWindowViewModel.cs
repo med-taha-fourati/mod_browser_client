@@ -1,27 +1,35 @@
-﻿using ModArchiveDownloaderFrontend.Models;
+﻿using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using ModArchiveDownloaderFrontend.Models;
+using ModArchiveDownloaderFrontend.Repository;
 
 namespace ModArchiveDownloaderFrontend.ViewModels;
 
-public class MainWindowViewModel : ViewModelBase
+public partial class MainWindowViewModel : ViewModelBase
 {
-    public string Greeting { get; } = "Welcome to Avalonia!";
-    public Module[] Items { get; set; } = new[]
+    public IAsyncRelayCommand SearchCommand { get; }
+    public MainWindowViewModel()
     {
-        new Module { FileName = "test.txt", ModuleCode = "test" },
-        new Module { FileName = "thunder_the_secret.symmod", ModuleCode = "thunder_the_secret" },
-        new Module { FileName = "test.txt", ModuleCode = "test" },
-        new Module { FileName = "thunder_the_secret.symmod", ModuleCode = "thunder_the_secret" },
-        new Module { FileName = "test.txt", ModuleCode = "test" },
-        new Module { FileName = "thunder_the_secret.symmod", ModuleCode = "thunder_the_secret" },
-        new Module { FileName = "test.txt", ModuleCode = "test" },
-        new Module { FileName = "thunder_the_secret.symmod", ModuleCode = "thunder_the_secret" },
-        new Module { FileName = "test.txt", ModuleCode = "test" },
-        new Module { FileName = "thunder_the_secret.symmod", ModuleCode = "thunder_the_secret" },
-        new Module { FileName = "test.txt", ModuleCode = "test" },
-        new Module { FileName = "thunder_the_secret.symmod", ModuleCode = "thunder_the_secret" }
-    };
+        SearchCommand = new AsyncRelayCommand(FetchModules);
+    }
+    public string Greeting { get; } = "Welcome to Avalonia!";
+    
+    [ObservableProperty]
+    private string _searchText = string.Empty;
+
+    [ObservableProperty] 
+    private ObservableCollection<Module> _items = new();
     public string ErrorMessage { get; } = "Unable to find";
     public string SearchBeginning { get; } = "Get Started by searching at the top left";
-    
-    public bool HasNoItems => Items.Length == 0 || Items == null;
+    public bool HasNoItems => Items.Count == 0;
+
+    private async Task FetchModules()
+    {
+        var modules = await new ApiRepository().GetModules(SearchText ?? string.Empty);
+
+        Items = modules;
+    }
 }
