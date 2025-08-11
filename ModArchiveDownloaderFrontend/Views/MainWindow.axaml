@@ -24,14 +24,16 @@
         </Border>
 
         <!-- ListView Area -->
-        <StackPanel x:Name="SearchArea" Margin="20">
+        <StackPanel x:Name="SearchArea" Margin="20 10">
             <Label>Search By Mod Name: </Label>
             <TextBox Text="{Binding SearchText, Mode=TwoWay}" x:Name="SearchAreaTextBox" Watermark="e.g thunder"></TextBox>
             <Button Command="{Binding SearchCommand}" Margin="0 10"><TextBlock Foreground="AliceBlue">Search</TextBlock></Button>
+            <TextBlock Text="{Binding Elements}" Margin="16 5"></TextBlock>
         </StackPanel>
 
         <!-- Card ListBox Area -->
-        <ListBox IsVisible="{Binding !HasNoItems}" ItemsSource="{Binding Items}" Margin="10,10,0,0">
+        <Grid MaxHeight="400">
+            <ListBox IsVisible="{Binding !HasNoItems}" ItemsSource="{Binding Items}" Margin="10,10,0,0">
             <ListBox.ItemTemplate>
                 <DataTemplate x:DataType="models:Module">
                     <!--BoxShadow="2,2,8,0,#888"-->
@@ -53,6 +55,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        </Grid>
         
         <TextBlock Text="No modules found."
                    HorizontalAlignment="Center"
