@@ -24,15 +24,17 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] 
     private Module[] _items = new Module[0];
 
+    [ObservableProperty] 
+    private Module _selectedItem;
+
     [ObservableProperty] private string _elements = "Modules found: 0";
-    public string ErrorMessage { get; } = "Unable to find";
-    public string SearchBeginning { get; } = "Get Started by searching at the top left";
     public bool HasNoItems => Items.Length == 0;
     
     partial void OnItemsChanged(Module[] value)
     {
         OnPropertyChanged(nameof(HasNoItems));
         OnPropertyChanged(nameof(Elements));
+        //OnPropertyChanged(nameof(SelectedItem));
     }
 
     private async Task FetchModules()

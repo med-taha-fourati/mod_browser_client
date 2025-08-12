@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ModArchiveDownloaderFrontend.Models;
@@ -26,36 +27,58 @@ public class ApiRepository : IApiRepository
     public async Task<ObservableCollection<Module>> GetModules(string search)
     {
         var url = $"http://localhost:3000/browse?search={Uri.EscapeDataString(search)}";
-        using var httpClient = new HttpClient();
-
-        try
+        using (var httpClient = new HttpClient())
         {
-            var response = await httpClient.GetAsync(url);
-            response.EnsureSuccessStatusCode();
-
-            var jsonString = await response.Content.ReadAsStringAsync();
-
-            var apiResponse = JsonSerializer.Deserialize<ApiResponse>(jsonString, new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true
-            });
-            
-            if (apiResponse?.Result != null)
-            {
-                var modules = apiResponse.Result.Select(r => new Module
+                var response = await httpClient.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var jsonString = await response.Content.ReadAsStringAsync();
+
+                var apiResponse = JsonSerializer.Deserialize<ApiResponse>(jsonString, new JsonSerializerOptions
                 {
-                    ModuleCode = r.Code,
-                    FileName = r.Name
+                    PropertyNameCaseInsensitive = true
                 });
 
-                return new ObservableCollection<Module>(modules);
+                if (apiResponse?.Result != null)
+                {
+                    var modules = apiResponse.Result.Select(r => new Module
+                    {
+                        ModuleCode = r.Code,
+                        FileName = r.Name
+                    });
+
+                    return new ObservableCollection<Module>(modules);
+                }
+
+                return new ObservableCollection<Module>();
             }
-            return new ObservableCollection<Module>();
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching modules: {ex.Message}");
+                return new ObservableCollection<Module>();
+            }
         }
-        catch (Exception ex)
+    }
+
+    public async Task<bool> DownloadModule(int moduleCode)
+    {
+        var url = $"http://localhost:3000/download?search={Uri.EscapeDataString(moduleCode.ToString())}";
+        using (var httpClient = new HttpClient())
         {
-            Console.WriteLine($"Error fetching modules: {ex.Message}");
-            return new ObservableCollection<Module>();
+            try
+            {
+                var response = await httpClient.PostAsync(url, new StringContent("", Encoding.UTF8, "text/plain"));
+                response.EnsureSuccessStatusCode();
+                return true;
+            } catch (Exception ex)
+            {
+                Console.WriteLine($"Error downloading module: {ex.Message}");
+                return false;
+            }
         }
+        
+        
     }
 }

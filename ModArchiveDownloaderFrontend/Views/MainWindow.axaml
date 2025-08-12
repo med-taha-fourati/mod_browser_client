@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:models="clr-namespace:ModArchiveDownloaderFrontend.Models"
+        xmlns:dataAnnotations="clr-namespace:System.ComponentModel.DataAnnotations;assembly=System.ComponentModel.Annotations"
         mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
         Width="1000" Height="600"
         x:Class="ModArchiveDownloaderFrontend.Views.MainWindow"
@@ -11,6 +12,7 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="modarchive.org Downloader Client">
 
+    
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
@@ -33,7 +35,10 @@
 
         <!-- Card ListBox Area -->
         <Grid MaxHeight="400">
-            <ListBox IsVisible="{Binding !HasNoItems}" ItemsSource="{Binding Items}" Margin="10,10,0,0">
+            <ListBox IsVisible="{Binding !HasNoItems}" 
+                     ItemsSource="{Binding Items}" 
+                     SelectedItem="{Binding SelectedItem, Mode=TwoWay}" 
+                     Margin="10,10,0,0">
             <ListBox.ItemTemplate>
                 <DataTemplate x:DataType="models:Module">
                     <!--BoxShadow="2,2,8,0,#888"-->
@@ -43,11 +48,17 @@
                             <!-- Main info on the left -->
                             <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
                                 <TextBlock Text="{Binding FileName}" FontWeight="Bold" FontSize="16"/>
-                                <TextBlock Text="{Binding ModuleCode}" FontSize="13" Foreground="Gray"/>
+                                <DockPanel VerticalAlignment="Center">
+                                    <TextBlock FontSize="13" Foreground="DarkGray" FontWeight="Bold" Margin="0 0 5 0">Module Id/Code: </TextBlock>
+                                    <TextBlock Text="{Binding ModuleCode}" FontSize="13" Foreground="Gray"/>
+                                </DockPanel>
                             </StackPanel>
                             <!-- Action buttons on the right -->
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" DockPanel.Dock="Right">
-                                <Button ToolTip.Tip="Download"><TextBlock FontSize="18" Foreground="AliceBlue">Download</TextBlock></Button>
+                                <Button ToolTip.Tip="Download" 
+                                        Command="{Binding DownloadCommand}">
+                                    <TextBlock FontSize="18" Foreground="AliceBlue">Download</TextBlock>
+                                </Button>
                                 <Button ToolTip.Tip="Browse Details"><TextBlock FontSize="18" Foreground="AliceBlue">View</TextBlock></Button>
                             </StackPanel>
                         </DockPanel>
