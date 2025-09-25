@@ -7,6 +7,8 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ModArchiveDownloaderFrontend.Models;
+using ModArchiveDownloaderFrontend.Services;
+using static ModArchiveDownloaderFrontend.Services.ApiService;
 
 namespace ModArchiveDownloaderFrontend.Repository;
 
@@ -26,7 +28,7 @@ public class ApiRepository : IApiRepository
 {
     public async Task<ObservableCollection<Module>> GetModules(string search)
     {
-        var url = $"http://localhost:3000/browse?search={Uri.EscapeDataString(search)}";
+        var url = $"{ApiUrl}/browse?search={Uri.EscapeDataString(search)}";
         using (var httpClient = new HttpClient())
         {
             try
@@ -64,7 +66,7 @@ public class ApiRepository : IApiRepository
 
     public async Task<bool> DownloadModule(int moduleCode)
     {
-        var url = $"http://localhost:3000/download?search={Uri.EscapeDataString(moduleCode.ToString())}";
+        var url = $"{ApiUrl}/download?search={Uri.EscapeDataString(moduleCode.ToString())}";
         using (var httpClient = new HttpClient())
         {
             try
